@@ -1,0 +1,120 @@
+create table staff (
+SID int,
+name varchar (20),
+primary key (SID)
+);
+
+create table member (
+SID int,
+name varchar (20),
+primary key (SID),
+);
+
+create table person (
+PID int,
+name varchar (20),
+date_of_birth date,
+gender varchar (3),
+primary key (PID)
+);
+
+create table movie (
+MID int,
+title varchar(30),
+release_year int,
+length int,
+pg_rating varchar(5),
+primary key (MID)
+);
+
+create table room (
+room_number int,
+capacity int,
+primary key (room_number)
+);
+
+create table showing (
+room_number int,
+showtime timestamp,
+movie_title varchar (30),
+MID int,
+primary key (room_number, showtime),
+constraint showing_fk1 foreign key (room_number) references room (room_number) on delete cascade,
+constraint showing_fk2 foreign key (MID) references movie (MID) on delete cascade
+);
+
+create table ticket (
+showtime timestamp,
+price numeric (8, 2),
+SID int,
+room_number int,
+primary key (SID, showtime, room_number),
+constraint ticket_fk1 foreign key (SID) references member (SID) on delete cascade,
+constraint ticket_fk2 foreign key (room_number, showtime) references showing (room_number, showtime) on delete cascade
+);
+
+create table rate_actor (
+SID int,
+PID int,
+score_actor numeric (8, 2),
+primary key (SID, PID),
+constraint ra_fk1 foreign key (SID) references member (SID) on delete cascade,
+constraint ra_fk2 foreign key (PID) references person (PID) on delete cascade
+);
+
+create table rate_movie (
+SID int,
+MID int,
+score_movie numeric (8, 2),
+primary key (SID, MID),
+constraint rm_fk1 foreign key (SID) references member (SID) on delete cascade,
+constraint rm_fk2 foreign key (MID) references movie (MID) on delete cascade
+);
+
+create table act (
+PID int,
+MID int,
+role varchar(20),
+primary key(PID, MID, role),
+constraint act_fk1 foreign key (PID) references person (PID) on delete cascade,
+constraint act_fk2 foreign key (MID) references movie (MID) on delete cascade
+);
+
+create table direct (
+PID int,
+MID int,
+primary key (MID, PID),
+constraint direct_fk1 foreign key (PID) references person (PID) on delete cascade,
+constraint direct_fk2 foreign key (MID) references movie (MID) on delete cascade
+);
+
+create table write (
+PID int,
+MID int,
+primary key (MID, PID),
+constraint write_fk1 foreign key (PID) references person (PID) on delete cascade,
+constraint write_fk2 foreign key (MID) references movie (MID) on delete cascade
+);
+
+create table payment_method (
+credit numeric (20, 0),
+debit numeric (20, 0),
+paypal numeric (20, 0),
+SID int,
+primary key(SID, credit, debit, paypal),
+constraint pm_fk foreign key (SID) references member (SID) on delete cascade
+);
+
+create table occupation (
+occupation varchar (10),
+PID int,
+primary key (occupation, PID),
+constraint occ_fk foreign key (PID) references person (PID) on delete cascade
+);
+
+create table genre (
+MID int,
+genre varchar (10),
+primary key (MID, genre),
+constraint genre_fk foreign key (MID) references movie (MID) on delete cascade
+);
